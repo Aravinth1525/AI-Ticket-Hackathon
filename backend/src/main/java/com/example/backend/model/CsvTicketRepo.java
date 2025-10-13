@@ -138,21 +138,24 @@
 //     }
 // }
 
-
 package com.example.backend.repo;
 
 import com.example.backend.model.Ticket;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
-import java.nio.file.*;
 import java.util.*;
 
 @Repository
 public class CsvTicketRepo {
 
     private final String filePath = "tickets.csv";
-    private final List<String> headers = List.of("id","timestamp","customer","category","question","status","botReply","confidence","assignedAgent");
+    private final List<String> headers = List.of(
+            "id", "timestamp", "customer", "category", "question",
+            "status", "botReply", "confidence", "assignedAgent", "strandId"
+    );
 
     public CsvTicketRepo() throws IOException {
         File file = new File(filePath);
@@ -175,7 +178,8 @@ public class CsvTicketRepo {
                     t.status,
                     t.botReply.replace(",", " "),
                     String.valueOf(t.confidence),
-                    t.assignedAgent
+                    t.assignedAgent,
+                    t.strandId != null ? t.strandId : ""
             )));
             bw.newLine();
         }
@@ -183,26 +187,31 @@ public class CsvTicketRepo {
 
     public synchronized List<Ticket> findAll() throws IOException {
         List<Ticket> list = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line = br.readLine(); // skip headers
-            while ((line = br.readLine()) != null) {
-                String[] cols = line.split(",", -1);
-                if (cols.length < headers.size()) continue;
+        try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
+            String[] line;
+            boolean first = true;
+            while (true) {
+                try {
+                    line = reader.readNext();
+                } catch (CsvValidationException e) {
+                    throw new IOException("CSV parse error", e);
+                }
+                if (line == null) break;
+                if (first) { first = false; continue; } // skip header
+                if (line.length < headers.size()) continue;
 
                 Ticket t = new Ticket();
-                t.id = cols[0];
-                try { t.timestamp = Long.parseLong(cols[1]); } catch (NumberFormatException e) { t.timestamp = 0; }
-                t.customer = cols[2];
-                t.category = cols[3];
-                t.question = cols[4];
-                t.status = cols[5];
-                t.botReply = cols[6];
+                t.id = line[0];
+                try { t.timestamp = Long.parseLong(line[1]); } catch (NumberFormatException e) { t.timestamp = 0; }
+                t.customer = line[2];
+                t.category = line[3];
+                t.question = line[4];
+                t.status = line[5];
+                t.botReply = line[6];
+                try { t.confidence = Double.parseDouble(line[7]); } catch (NumberFormatException e) { t.confidence = 0.0; }
+                t.assignedAgent = line[8];
+                t.strandId = line.length > 9 ? line[9] : null;
 
-                // Safe confidence parsing
-                try { t.confidence = Double.parseDouble(cols[7]); }
-                catch (NumberFormatException e) { t.confidence = 0.0; }
-
-                t.assignedAgent = cols[8];
                 list.add(t);
             }
         }
@@ -261,11 +270,11 @@ public class CsvTicketRepo {
                         t.status,
                         t.botReply.replace(",", " "),
                         String.valueOf(t.confidence),
-                        t.assignedAgent
+                        t.assignedAgent,
+                        t.strandId != null ? t.strandId : ""
                 )));
                 bw.newLine();
             }
         }
     }
 }
-

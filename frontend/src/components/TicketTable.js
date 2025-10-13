@@ -210,22 +210,213 @@
 
 
 
+// import React, { useEffect, useState } from "react";
+
+// export default function TicketTable({ apiUrl }) {
+//   const [tickets, setTickets] = useState([]);
+//   const [search, setSearch] = useState("");
+
+//   const fetchTickets = async () => {
+//     const res = await fetch(`${apiUrl}/tickets`);
+//     const data = await res.json();
+
+//     // Store original AI reply/confidence for restore
+//     const updated = data.map((t) => ({
+//       ...t,
+//       originalBotReply: t.originalBotReply ?? t.botReply,
+//       originalBotConfidence: t.originalBotConfidence ?? t.confidence,
+//       currentReply: t.currentReply ?? t.botReply,
+//     }));
+
+//     setTickets(updated);
+//   };
+
+//   useEffect(() => {
+//     fetchTickets();
+//   }, []);
+
+//   const handleResolve = async (ticket, manual = false) => {
+//     let replyToSend;
+//     let confidenceToSend;
+
+//     if (!manual && ticket.acceptBotClicked) {
+//       // Accept Bot: restore original AI reply
+//       replyToSend = ticket.originalBotReply;
+//       confidenceToSend = ticket.originalBotConfidence;
+//     } else if (manual) {
+//       // Manual resolve: prompt for reply
+//       const reply = prompt("Enter manual reply:", ticket.currentReply || "");
+//       if (!reply) return;
+//       replyToSend = reply;
+//       confidenceToSend = 1.0;
+//     } else {
+//       // Default bot resolve
+//       replyToSend = ticket.botReply;
+//       confidenceToSend = ticket.confidence;
+//     }
+
+//     // Send resolved reply to backend with status=Resolved
+//     await fetch(`${apiUrl}/tickets/${ticket.id}/resolve`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         reply: replyToSend,
+//         agent: !manual ? "bot" : "human",
+//         confidence: confidenceToSend,
+//         status: "Resolved", // ✅ ensure backend updates status
+//       }),
+//     });
+
+//     // Update ticket locally
+//     setTickets((prev) =>
+//       prev.map((t) =>
+//         t.id === ticket.id
+//           ? {
+//               ...t,
+//               currentReply: replyToSend,
+//               confidence: confidenceToSend,
+//               status: "Resolved", // ✅ update status locally
+//             }
+//           : t
+//       )
+//     );
+//   };
+
+//   const handleDelete = async (id) => {
+//     if (!confirm(`Delete ticket ${id}?`)) return;
+//     await fetch(`${apiUrl}/tickets/${id}`, { method: "DELETE" });
+//     fetchTickets();
+//   };
+
+//   const filtered = tickets.filter((t) =>
+//     t.question.toLowerCase().includes(search.toLowerCase())
+//   );
+
+//   const formatConfidence = (c) => {
+//     if (c == null) return "0.0%";
+//     let val = Number(c);
+//     if (val <= 1) val = val * 100;
+//     return val.toFixed(1) + "%";
+//   };
+
+//   return (
+//     <div>
+//       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+//         <input
+//           placeholder="Search tickets..."
+//           className="search-bar"
+//           value={search}
+//           onChange={(e) => setSearch(e.target.value)}
+//           style={{ flex: 1, marginRight: 8, padding: "6px 8px" }}
+//         />
+//         <button className="refresh" onClick={fetchTickets} style={{ padding: "6px 12px" }}>
+//           🔄 Refresh
+//         </button>
+//       </div>
+
+//       <table style={{ width: "100%", borderCollapse: "collapse" }}>
+//         <thead>
+//           <tr>
+//             {["ID", "Customer", "Category", "Question", "Status", "Reply", "Confidence", "Action"].map(
+//               (h) => (
+//                 <th key={h} style={{ borderBottom: "1px solid #ccc", padding: "8px", textAlign: "left" }}>
+//                   {h}
+//                 </th>
+//               )
+//             )}
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {filtered.map((t) => (
+//             <tr key={t.id} style={{ borderBottom: "1px solid #eee" }}>
+//               <td style={{ padding: "8px" }}>{t.id}</td>
+//               <td style={{ padding: "8px" }}>{t.customer}</td>
+//               <td style={{ padding: "8px" }}>{t.category}</td>
+//               <td style={{ padding: "8px" }}>{t.question}</td>
+//               <td
+//                 style={{
+//                   padding: "8px",
+//                   fontWeight: "bold",
+//                   color:
+//                     t.status === "Resolved"
+//                       ? "green"
+//                       : t.status === "Created"
+//                       ? "blue"
+//                       : "orange",
+//                 }}
+//               >
+//                 {t.status}
+//               </td>
+//               <td style={{ padding: "8px" }}>{t.currentReply}</td>
+//               <td style={{ padding: "8px" }}>{formatConfidence(t.confidence)}</td>
+//               <td style={{ padding: "8px", display: "flex", gap: 8, flexWrap: "wrap" }}>
+//                 {(t.status === "Created" || t.status === "Pending") && (
+//                   <>
+//                     {t.originalBotReply && (
+//                       <button
+//                         className="action-btn"
+//                         onClick={() => handleResolve({ ...t, acceptBotClicked: true })}
+//                       >
+//                         Accept Bot
+//                       </button>
+//                     )}
+//                     <button className="action-btn" onClick={() => handleResolve(t, true)}>
+//                       Manual Resolve
+//                     </button>
+//                     <button className="action-btn secondary" onClick={() => handleDelete(t.id)}>
+//                       Delete
+//                     </button>
+//                   </>
+//                 )}
+//                 {t.status === "Resolved" && (
+//                   <>
+//                     <button
+//                       className="action-btn ghost"
+//                       onClick={() =>
+//                         fetch(`${apiUrl}/tickets/${t.id}/status`, {
+//                           method: "POST",
+//                           headers: { "Content-Type": "application/json" },
+//                           body: JSON.stringify({ status: "Pending" }),
+//                         }).then(() => fetchTickets())
+//                       }
+//                     >
+//                       Change Status
+//                     </button>
+//                     <button className="action-btn secondary" onClick={() => handleDelete(t.id)}>
+//                       Delete
+//                     </button>
+//                   </>
+//                 )}
+//               </td>
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+// }
+
+
+
+
 import React, { useEffect, useState } from "react";
 
 export default function TicketTable({ apiUrl }) {
   const [tickets, setTickets] = useState([]);
   const [search, setSearch] = useState("");
 
+  // Fetch tickets from backend
   const fetchTickets = async () => {
     const res = await fetch(`${apiUrl}/tickets`);
     const data = await res.json();
 
-    // Store original AI reply/confidence for restore
+    // Normalize fields for frontend
     const updated = data.map((t) => ({
       ...t,
-      originalBotReply: t.originalBotReply ?? t.botReply,
-      originalBotConfidence: t.originalBotConfidence ?? t.confidence,
-      currentReply: t.currentReply ?? t.botReply,
+      strand_id: t.strand_id ?? t.strandId ?? "",
+      originalBotReply: t.originalBotReply ?? t.botReply ?? "",
+      originalBotConfidence: t.originalBotConfidence ?? t.confidence ?? 0.0,
+      currentReply: t.currentReply ?? t.botReply ?? "",
     }));
 
     setTickets(updated);
@@ -235,16 +426,17 @@ export default function TicketTable({ apiUrl }) {
     fetchTickets();
   }, []);
 
+  // Resolve ticket
   const handleResolve = async (ticket, manual = false) => {
     let replyToSend;
     let confidenceToSend;
 
     if (!manual && ticket.acceptBotClicked) {
-      // Accept Bot: restore original AI reply
-      replyToSend = ticket.originalBotReply;
-      confidenceToSend = ticket.originalBotConfidence;
+      // Accept Bot → backend handles AI query
+      replyToSend = ticket.currentReply; // keep old value until backend responds
+      confidenceToSend = ticket.confidence || 0.0;
     } else if (manual) {
-      // Manual resolve: prompt for reply
+      // Manual resolve
       const reply = prompt("Enter manual reply:", ticket.currentReply || "");
       if (!reply) return;
       replyToSend = reply;
@@ -252,51 +444,64 @@ export default function TicketTable({ apiUrl }) {
     } else {
       // Default bot resolve
       replyToSend = ticket.botReply;
-      confidenceToSend = ticket.confidence;
+      confidenceToSend = ticket.confidence || ticket.originalBotConfidence || 0.0;
     }
 
-    // Send resolved reply to backend with status=Resolved
-    await fetch(`${apiUrl}/tickets/${ticket.id}/resolve`, {
+    // Send resolve status to backend
+    const res = await fetch(`${apiUrl}/tickets/${ticket.id}/resolve`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         reply: replyToSend,
         agent: !manual ? "bot" : "human",
         confidence: confidenceToSend,
-        status: "Resolved", // ✅ ensure backend updates status
+        status: "Resolved",
+        issue_text: ticket.question,
+        strandId: ticket.strand_id,
       }),
     });
 
-    // Update ticket locally
-    setTickets((prev) =>
-      prev.map((t) =>
-        t.id === ticket.id
-          ? {
-              ...t,
-              currentReply: replyToSend,
-              confidence: confidenceToSend,
-              status: "Resolved", // ✅ update status locally
-            }
-          : t
-      )
-    );
+    if (res.ok) {
+      // Fetch updated ticket from backend to get AI reply
+      const updatedRes = await fetch(`${apiUrl}/tickets`);
+      const data = await updatedRes.json();
+      const updatedTicket = data.find((t) => t.id === ticket.id);
+
+      if (updatedTicket) {
+        setTickets((prev) =>
+          prev.map((t) =>
+            t.id === ticket.id
+              ? {
+                  ...t,
+                  currentReply: updatedTicket.botReply, // updated bot reply
+                  confidence: updatedTicket.confidence,
+                  status: updatedTicket.status,
+                  acceptBotClicked: false,
+                }
+              : t
+          )
+        );
+      }
+    }
   };
 
+  // Delete ticket
   const handleDelete = async (id) => {
     if (!confirm(`Delete ticket ${id}?`)) return;
     await fetch(`${apiUrl}/tickets/${id}`, { method: "DELETE" });
     fetchTickets();
   };
 
+  // Filter tickets by search
   const filtered = tickets.filter((t) =>
     t.question.toLowerCase().includes(search.toLowerCase())
   );
 
-  const formatConfidence = (c) => {
-    if (c == null) return "0.0%";
-    let val = Number(c);
-    if (val <= 1) val = val * 100;
-    return val.toFixed(1) + "%";
+  // Format confidence
+  const formatConfidence = (t) => {
+    let c = t.confidence != null && t.confidence > 0 ? t.confidence : t.originalBotConfidence || 0.0;
+    if (c <= 1) c = c * 100; // fraction → %
+    return c.toFixed(1) + "%";
   };
 
   return (
@@ -340,7 +545,7 @@ export default function TicketTable({ apiUrl }) {
                   color:
                     t.status === "Resolved"
                       ? "green"
-                      : t.status === "Created"
+                      : t.status === "Created" || t.status === "Partially Resolved"
                       ? "blue"
                       : "orange",
                 }}
@@ -348,9 +553,9 @@ export default function TicketTable({ apiUrl }) {
                 {t.status}
               </td>
               <td style={{ padding: "8px" }}>{t.currentReply}</td>
-              <td style={{ padding: "8px" }}>{formatConfidence(t.confidence)}</td>
+              <td style={{ padding: "8px" }}>{formatConfidence(t)}</td>
               <td style={{ padding: "8px", display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {(t.status === "Created" || t.status === "Pending") && (
+                {(t.status === "Created" || t.status === "Pending" || t.status === "Partially Resolved") && (
                   <>
                     {t.originalBotReply && (
                       <button
