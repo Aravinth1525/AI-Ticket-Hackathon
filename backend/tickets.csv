@@ -1,3 +1,5 @@
 id,timestamp,customer,category,question,status,botReply,confidence,assignedAgent,strandId
 dc71f124-ba12-40d8-b732-b473a4fdb30a,1760363972,Mounish,VPN,VPN fails to connect,Resolved,Verify VPN credentials  ensure corporate VPN client is up-to-date  and check if 2FA is required.,0.94,bot,
 1b7d216a-8fe4-4635-af6f-1abe4d88975e,1760364034,Aravinth,Email,Unable to send emails from my account,Resolved,Check SMTP server settings  validate sender domain SPF/DKIM  and review mail queue for errors.,88.3,bot,
+9f9fe6cd-bd50-4f8b-834a-d2fad4376e5d,1760376538,Hari,Internet,slow internet,Resolved,Run speed test and restart WAN interface,0.93,bot,
+a272cfde-2b82-4690-9849-f35b97bbe490,1760377954,dw,Internet,hello,Resolved,This issue is new  wait for reply from admin,55.9,bot,

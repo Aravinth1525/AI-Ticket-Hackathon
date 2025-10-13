@@ -399,9 +399,425 @@
 
 
 
+// import React, { useEffect, useState } from "react";
+
+// export default function TicketTable({ apiUrl }) {
+//   const [tickets, setTickets] = useState([]);
+//   const [search, setSearch] = useState("");
+
+//   // Fetch tickets from backend
+//   const fetchTickets = async () => {
+//     const res = await fetch(`${apiUrl}/tickets`);
+//     const data = await res.json();
+
+//     // Normalize fields for frontend
+//     const updated = data.map((t) => ({
+//       ...t,
+//       strand_id: t.strand_id ?? t.strandId ?? "",
+//       originalBotReply: t.originalBotReply ?? t.botReply ?? "",
+//       originalBotConfidence: t.originalBotConfidence ?? t.confidence ?? 0.0,
+//       currentReply: t.currentReply ?? t.botReply ?? "",
+//     }));
+
+//     setTickets(updated);
+//   };
+
+//   useEffect(() => {
+//     fetchTickets();
+//   }, []);
+
+//   // Resolve ticket
+//   const handleResolve = async (ticket, manual = false) => {
+//     let replyToSend;
+//     let confidenceToSend;
+
+//     if (!manual && ticket.acceptBotClicked) {
+//       // Accept Bot → backend handles AI query
+//       replyToSend = ticket.currentReply; // keep old value until backend responds
+//       confidenceToSend = ticket.confidence || 0.0;
+//     } else if (manual) {
+//       // Manual resolve
+//       const reply = prompt("Enter manual reply:", ticket.currentReply || "");
+//       if (!reply) return;
+//       replyToSend = reply;
+//       confidenceToSend = 1.0;
+//     } else {
+//       // Default bot resolve
+//       replyToSend = ticket.botReply;
+//       confidenceToSend = ticket.confidence || ticket.originalBotConfidence || 0.0;
+//     }
+
+//     // Send resolve status to backend
+//     const res = await fetch(`${apiUrl}/tickets/${ticket.id}/resolve`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         reply: replyToSend,
+//         agent: !manual ? "bot" : "human",
+//         confidence: confidenceToSend,
+//         status: "Resolved",
+//         issue_text: ticket.question,
+//         strandId: ticket.strand_id,
+//       }),
+//     });
+
+//     if (res.ok) {
+//       // Fetch updated ticket from backend to get AI reply
+//       const updatedRes = await fetch(`${apiUrl}/tickets`);
+//       const data = await updatedRes.json();
+//       const updatedTicket = data.find((t) => t.id === ticket.id);
+
+//       if (updatedTicket) {
+//         setTickets((prev) =>
+//           prev.map((t) =>
+//             t.id === ticket.id
+//               ? {
+//                   ...t,
+//                   currentReply: updatedTicket.botReply, // updated bot reply
+//                   confidence: updatedTicket.confidence,
+//                   status: updatedTicket.status,
+//                   acceptBotClicked: false,
+//                 }
+//               : t
+//           )
+//         );
+//       }
+//     }
+//   };
+
+//   // Delete ticket
+//   const handleDelete = async (id) => {
+//     if (!confirm(`Delete ticket ${id}?`)) return;
+//     await fetch(`${apiUrl}/tickets/${id}`, { method: "DELETE" });
+//     fetchTickets();
+//   };
+
+//   // Filter tickets by search
+//   const filtered = tickets.filter((t) =>
+//     t.question.toLowerCase().includes(search.toLowerCase())
+//   );
+
+//   // Format confidence
+//   const formatConfidence = (t) => {
+//     let c = t.confidence != null && t.confidence > 0 ? t.confidence : t.originalBotConfidence || 0.0;
+//     if (c <= 1) c = c * 100; // fraction → %
+//     return c.toFixed(1) + "%";
+//   };
+
+//   return (
+//     <div>
+//       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+//         <input
+//           placeholder="Search tickets..."
+//           className="search-bar"
+//           value={search}
+//           onChange={(e) => setSearch(e.target.value)}
+//           style={{ flex: 1, marginRight: 8, padding: "6px 8px" }}
+//         />
+//         <button className="refresh" onClick={fetchTickets} style={{ padding: "6px 12px" }}>
+//           🔄 Refresh
+//         </button>
+//       </div>
+
+//       <table style={{ width: "100%", borderCollapse: "collapse" }}>
+//         <thead>
+//           <tr>
+//             {["ID", "Customer", "Category", "Question", "Status", "Reply", "Confidence", "Action"].map(
+//               (h) => (
+//                 <th key={h} style={{ borderBottom: "1px solid #ccc", padding: "8px", textAlign: "left" }}>
+//                   {h}
+//                 </th>
+//               )
+//             )}
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {filtered.map((t) => (
+//             <tr key={t.id} style={{ borderBottom: "1px solid #eee" }}>
+//               <td style={{ padding: "8px" }}>{t.id}</td>
+//               <td style={{ padding: "8px" }}>{t.customer}</td>
+//               <td style={{ padding: "8px" }}>{t.category}</td>
+//               <td style={{ padding: "8px" }}>{t.question}</td>
+//               <td
+//                 style={{
+//                   padding: "8px",
+//                   fontWeight: "bold",
+//                   color:
+//                     t.status === "Resolved"
+//                       ? "green"
+//                       : t.status === "Created" || t.status === "Partially Resolved"
+//                       ? "blue"
+//                       : "orange",
+//                 }}
+//               >
+//                 {t.status}
+//               </td>
+//               <td style={{ padding: "8px" }}>{t.currentReply}</td>
+//               <td style={{ padding: "8px" }}>{formatConfidence(t)}</td>
+//               <td style={{ padding: "8px", display: "flex", gap: 8, flexWrap: "wrap" }}>
+//                 {(t.status === "Created" || t.status === "Pending" || t.status === "Partially Resolved") && (
+//                   <>
+//                     {t.originalBotReply && (
+//                       <button
+//                         className="action-btn"
+//                         onClick={() => handleResolve({ ...t, acceptBotClicked: true })}
+//                       >
+//                         Accept Bot
+//                       </button>
+//                     )}
+//                     <button className="action-btn" onClick={() => handleResolve(t, true)}>
+//                       Manual Resolve
+//                     </button>
+//                     <button className="action-btn secondary" onClick={() => handleDelete(t.id)}>
+//                       Delete
+//                     </button>
+//                   </>
+//                 )}
+//                 {t.status === "Resolved" && (
+//                   <>
+//                     <button
+//                       className="action-btn ghost"
+//                       onClick={() =>
+//                         fetch(`${apiUrl}/tickets/${t.id}/status`, {
+//                           method: "POST",
+//                           headers: { "Content-Type": "application/json" },
+//                           body: JSON.stringify({ status: "Pending" }),
+//                         }).then(() => fetchTickets())
+//                       }
+//                     >
+//                       Change Status
+//                     </button>
+//                     <button className="action-btn secondary" onClick={() => handleDelete(t.id)}>
+//                       Delete
+//                     </button>
+//                   </>
+//                 )}
+//               </td>
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+// }
+
+
+
+
+
+// import React, { useEffect, useState } from "react";
+
+// export default function TicketTable({ apiUrl, role }) {
+//   const [tickets, setTickets] = useState([]);
+//   const [search, setSearch] = useState("");
+
+//   // Fetch tickets from backend
+//   const fetchTickets = async () => {
+//     const res = await fetch(`${apiUrl}/tickets`);
+//     const data = await res.json();
+
+//     // Normalize fields for frontend
+//     const updated = data.map((t) => ({
+//       ...t,
+//       strand_id: t.strand_id ?? t.strandId ?? "",
+//       originalBotReply: t.originalBotReply ?? t.botReply ?? "",
+//       originalBotConfidence: t.originalBotConfidence ?? t.confidence ?? 0.0,
+//       currentReply: t.currentReply ?? t.botReply ?? "",
+//     }));
+
+//     setTickets(updated);
+//   };
+
+//   useEffect(() => {
+//     fetchTickets();
+//   }, []);
+
+//   // Resolve ticket
+//   const handleResolve = async (ticket, manual = false) => {
+//     let replyToSend;
+//     let confidenceToSend;
+
+//     if (!manual && ticket.acceptBotClicked) {
+//       replyToSend = ticket.currentReply;
+//       confidenceToSend = ticket.confidence || 0.0;
+//     } else if (manual) {
+//       const reply = prompt("Enter manual reply:", ticket.currentReply || "");
+//       if (!reply) return;
+//       replyToSend = reply;
+//       confidenceToSend = 1.0;
+//     } else {
+//       replyToSend = ticket.botReply;
+//       confidenceToSend = ticket.confidence || ticket.originalBotConfidence || 0.0;
+//     }
+
+//     const res = await fetch(`${apiUrl}/tickets/${ticket.id}/resolve`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         reply: replyToSend,
+//         agent: !manual ? "bot" : "human",
+//         confidence: confidenceToSend,
+//         status: "Resolved",
+//         issue_text: ticket.question,
+//         strandId: ticket.strand_id,
+//       }),
+//     });
+
+//     if (res.ok) {
+//       const updatedRes = await fetch(`${apiUrl}/tickets`);
+//       const data = await updatedRes.json();
+//       const updatedTicket = data.find((t) => t.id === ticket.id);
+
+//       if (updatedTicket) {
+//         setTickets((prev) =>
+//           prev.map((t) =>
+//             t.id === ticket.id
+//               ? {
+//                   ...t,
+//                   currentReply: updatedTicket.botReply,
+//                   confidence: updatedTicket.confidence,
+//                   status: updatedTicket.status,
+//                   acceptBotClicked: false,
+//                 }
+//               : t
+//           )
+//         );
+//       }
+//     }
+//   };
+
+//   // Delete ticket
+//   const handleDelete = async (id) => {
+//     if (!confirm(`Delete ticket ${id}?`)) return;
+//     await fetch(`${apiUrl}/tickets/${id}`, { method: "DELETE" });
+//     fetchTickets();
+//   };
+
+//   // Filter tickets by search
+//   const filtered = tickets.filter((t) =>
+//     t.question.toLowerCase().includes(search.toLowerCase())
+//   );
+
+//   // Format confidence
+//   const formatConfidence = (t) => {
+//     let c = t.confidence != null && t.confidence > 0 ? t.confidence : t.originalBotConfidence || 0.0;
+//     if (c <= 1) c = c * 100;
+//     return c.toFixed(1) + "%";
+//   };
+
+//   return (
+//     <div>
+//       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+//         <input
+//           placeholder="Search tickets..."
+//           className="search-bar"
+//           value={search}
+//           onChange={(e) => setSearch(e.target.value)}
+//           style={{ flex: 1, marginRight: 8, padding: "6px 8px" }}
+//         />
+//         <button className="refresh" onClick={fetchTickets} style={{ padding: "6px 12px" }}>
+//           🔄 Refresh
+//         </button>
+//       </div>
+
+//       <table style={{ width: "100%", borderCollapse: "collapse" }}>
+//         <thead>
+//           <tr>
+//             {["ID", "Customer", "Category", "Question", "Status", "Reply", "Confidence", "Action"].map(
+//               (h) => (
+//                 <th key={h} style={{ borderBottom: "1px solid #ccc", padding: "8px", textAlign: "left" }}>
+//                   {h}
+//                 </th>
+//               )
+//             )}
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {filtered.map((t) => (
+//             <tr key={t.id} style={{ borderBottom: "1px solid #eee" }}>
+//               <td style={{ padding: "8px" }}>{t.id}</td>
+//               <td style={{ padding: "8px" }}>{t.customer}</td>
+//               <td style={{ padding: "8px" }}>{t.category}</td>
+//               <td style={{ padding: "8px" }}>{t.question}</td>
+//               <td
+//                 style={{
+//                   padding: "8px",
+//                   fontWeight: "bold",
+//                   color:
+//                     t.status === "Resolved"
+//                       ? "green"
+//                       : t.status === "Created" || t.status === "Partially Resolved"
+//                       ? "blue"
+//                       : "orange",
+//                 }}
+//               >
+//                 {t.status}
+//               </td>
+//               <td style={{ padding: "8px" }}>{t.currentReply}</td>
+//               <td style={{ padding: "8px" }}>{formatConfidence(t)}</td>
+//               <td style={{ padding: "8px", display: "flex", gap: 8, flexWrap: "wrap" }}>
+//                 {role === "ADMIN" && (t.status === "Created" || t.status === "Pending" || t.status === "Partially Resolved") && (
+//                   <>
+//                     {t.originalBotReply && (
+//                       <button
+//                         className="action-btn"
+//                         onClick={() => handleResolve({ ...t, acceptBotClicked: true })}
+//                       >
+//                         Accept Bot
+//                       </button>
+//                     )}
+//                     <button className="action-btn" onClick={() => handleResolve(t, true)}>
+//                       Manual Resolve
+//                     </button>
+//                     <button className="action-btn secondary" onClick={() => handleDelete(t.id)}>
+//                       Delete
+//                     </button>
+//                   </>
+//                 )}
+//                 {role === "ADMIN" && t.status === "Resolved" && (
+//                   <>
+//                     <button
+//                       className="action-btn ghost"
+//                       onClick={() =>
+//                         fetch(`${apiUrl}/tickets/${t.id}/status`, {
+//                           method: "POST",
+//                           headers: { "Content-Type": "application/json" },
+//                           body: JSON.stringify({ status: "Pending" }),
+//                         }).then(() => fetchTickets())
+//                       }
+//                     >
+//                       Change Status
+//                     </button>
+//                     <button className="action-btn secondary" onClick={() => handleDelete(t.id)}>
+//                       Delete
+//                     </button>
+//                   </>
+//                 )}
+//               </td>
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+// auth-service
+
 import React, { useEffect, useState } from "react";
 
-export default function TicketTable({ apiUrl }) {
+export default function TicketTable({ apiUrl, role }) {
   const [tickets, setTickets] = useState([]);
   const [search, setSearch] = useState("");
 
@@ -432,22 +848,18 @@ export default function TicketTable({ apiUrl }) {
     let confidenceToSend;
 
     if (!manual && ticket.acceptBotClicked) {
-      // Accept Bot → backend handles AI query
-      replyToSend = ticket.currentReply; // keep old value until backend responds
+      replyToSend = ticket.currentReply;
       confidenceToSend = ticket.confidence || 0.0;
     } else if (manual) {
-      // Manual resolve
       const reply = prompt("Enter manual reply:", ticket.currentReply || "");
       if (!reply) return;
       replyToSend = reply;
       confidenceToSend = 1.0;
     } else {
-      // Default bot resolve
       replyToSend = ticket.botReply;
       confidenceToSend = ticket.confidence || ticket.originalBotConfidence || 0.0;
     }
 
-    // Send resolve status to backend
     const res = await fetch(`${apiUrl}/tickets/${ticket.id}/resolve`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -461,28 +873,7 @@ export default function TicketTable({ apiUrl }) {
       }),
     });
 
-    if (res.ok) {
-      // Fetch updated ticket from backend to get AI reply
-      const updatedRes = await fetch(`${apiUrl}/tickets`);
-      const data = await updatedRes.json();
-      const updatedTicket = data.find((t) => t.id === ticket.id);
-
-      if (updatedTicket) {
-        setTickets((prev) =>
-          prev.map((t) =>
-            t.id === ticket.id
-              ? {
-                  ...t,
-                  currentReply: updatedTicket.botReply, // updated bot reply
-                  confidence: updatedTicket.confidence,
-                  status: updatedTicket.status,
-                  acceptBotClicked: false,
-                }
-              : t
-          )
-        );
-      }
-    }
+    if (res.ok) fetchTickets();
   };
 
   // Delete ticket
@@ -500,7 +891,7 @@ export default function TicketTable({ apiUrl }) {
   // Format confidence
   const formatConfidence = (t) => {
     let c = t.confidence != null && t.confidence > 0 ? t.confidence : t.originalBotConfidence || 0.0;
-    if (c <= 1) c = c * 100; // fraction → %
+    if (c <= 1) c = c * 100;
     return c.toFixed(1) + "%";
   };
 
@@ -522,12 +913,17 @@ export default function TicketTable({ apiUrl }) {
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
-            {["ID", "Customer", "Category", "Question", "Status", "Reply", "Confidence", "Action"].map(
+            {["ID", "Customer", "Category", "Question", "Status", "Reply", "Confidence"].map(
               (h) => (
                 <th key={h} style={{ borderBottom: "1px solid #ccc", padding: "8px", textAlign: "left" }}>
                   {h}
                 </th>
               )
+            )}
+            {role === "ADMIN" && (
+              <th style={{ borderBottom: "1px solid #ccc", padding: "8px", textAlign: "left" }}>
+                Action
+              </th>
             )}
           </tr>
         </thead>
@@ -538,8 +934,7 @@ export default function TicketTable({ apiUrl }) {
               <td style={{ padding: "8px" }}>{t.customer}</td>
               <td style={{ padding: "8px" }}>{t.category}</td>
               <td style={{ padding: "8px" }}>{t.question}</td>
-              <td
-                style={{
+              <td style={{
                   padding: "8px",
                   fontWeight: "bold",
                   color:
@@ -548,51 +943,47 @@ export default function TicketTable({ apiUrl }) {
                       : t.status === "Created" || t.status === "Partially Resolved"
                       ? "blue"
                       : "orange",
-                }}
-              >
+                }}>
                 {t.status}
               </td>
               <td style={{ padding: "8px" }}>{t.currentReply}</td>
               <td style={{ padding: "8px" }}>{formatConfidence(t)}</td>
-              <td style={{ padding: "8px", display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {(t.status === "Created" || t.status === "Pending" || t.status === "Partially Resolved") && (
-                  <>
-                    {t.originalBotReply && (
-                      <button
-                        className="action-btn"
-                        onClick={() => handleResolve({ ...t, acceptBotClicked: true })}
-                      >
-                        Accept Bot
+
+              {role === "ADMIN" && (
+                <td style={{ padding: "8px", display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {(t.status === "Created" || t.status === "Pending" || t.status === "Partially Resolved") && (
+                    <>
+                      {t.originalBotReply && (
+                        <button className="action-btn" onClick={() => handleResolve({ ...t, acceptBotClicked: true })}>
+                          Accept Bot
+                        </button>
+                      )}
+                      <button className="action-btn" onClick={() => handleResolve(t, true)}>
+                        Manual Resolve
                       </button>
-                    )}
-                    <button className="action-btn" onClick={() => handleResolve(t, true)}>
-                      Manual Resolve
-                    </button>
-                    <button className="action-btn secondary" onClick={() => handleDelete(t.id)}>
-                      Delete
-                    </button>
-                  </>
-                )}
-                {t.status === "Resolved" && (
-                  <>
-                    <button
-                      className="action-btn ghost"
-                      onClick={() =>
+                      <button className="action-btn secondary" onClick={() => handleDelete(t.id)}>
+                        Delete
+                      </button>
+                    </>
+                  )}
+                  {t.status === "Resolved" && (
+                    <>
+                      <button className="action-btn ghost" onClick={() =>
                         fetch(`${apiUrl}/tickets/${t.id}/status`, {
                           method: "POST",
                           headers: { "Content-Type": "application/json" },
                           body: JSON.stringify({ status: "Pending" }),
                         }).then(() => fetchTickets())
-                      }
-                    >
-                      Change Status
-                    </button>
-                    <button className="action-btn secondary" onClick={() => handleDelete(t.id)}>
-                      Delete
-                    </button>
-                  </>
-                )}
-              </td>
+                      }>
+                        Change Status
+                      </button>
+                      <button className="action-btn secondary" onClick={() => handleDelete(t.id)}>
+                        Delete
+                      </button>
+                    </>
+                  )}
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
@@ -600,4 +991,3 @@ export default function TicketTable({ apiUrl }) {
     </div>
   );
 }
-

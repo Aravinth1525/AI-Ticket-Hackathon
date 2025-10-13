@@ -202,6 +202,238 @@
 
 
 
+# import os, uuid, time, random
+# from fastapi import FastAPI, Request, HTTPException
+# from fastapi.middleware.cors import CORSMiddleware
+# from pydantic import BaseModel
+# import pandas as pd
+# from sklearn.feature_extraction.text import TfidfVectorizer
+# from sklearn.metrics.pairwise import cosine_similarity
+
+# # ==============================
+# # Path setup
+# # ==============================
+# DEFAULT_LOCAL = os.path.join(os.getcwd(), "data")
+# DATA_PATH = os.environ.get("DATA_PATH", DEFAULT_LOCAL)
+# os.makedirs(DATA_PATH, exist_ok=True)
+
+# MEMORY_FILE = os.path.join(DATA_PATH, "memory.csv")
+# TICKETS_FILE = os.path.join(DATA_PATH, "tickets.csv")
+
+# # Ensure memory file exists
+# if not os.path.exists(MEMORY_FILE):
+#     df_init = pd.DataFrame(columns=["id","timestamp","issue_text","auto_reply","confidence","strand_id"])
+#     df_init.to_csv(MEMORY_FILE, index=False)
+
+# # Ensure tickets file exists
+# if not os.path.exists(TICKETS_FILE):
+#     df_init = pd.DataFrame(columns=["id","timestamp","customer","category","question","status","botReply","confidence","assignedAgent","strand_id"])
+#     df_init.to_csv(TICKETS_FILE, index=False)
+
+# # ==============================
+# # FastAPI Setup
+# # ==============================
+# app = FastAPI(title="AI Memory Service")
+
+# origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,
+#     allow_credentials=True,
+#     allow_methods=["GET", "POST", "OPTIONS"],
+#     allow_headers=["*"],
+# )
+
+# # ==============================
+# # Models
+# # ==============================
+# class Query(BaseModel):
+#     text: str
+#     top_k: int = 3
+
+# class AddMemory(BaseModel):
+#     issue_text: str
+#     auto_reply: str
+
+# # ==============================
+# # Helper functions
+# # ==============================
+# def read_csv(path):
+#     try:
+#         df_local = pd.read_csv(path)
+#         return df_local
+#     except Exception:
+#         return pd.DataFrame()
+
+# def rebuild_index():
+#     global df_memory, vectorizer, tfidf_matrix
+#     df_memory = read_csv(MEMORY_FILE)
+#     if len(df_memory) > 0:
+#         vectorizer = TfidfVectorizer(ngram_range=(1,2), stop_words='english')
+#         tfidf_matrix = vectorizer.fit_transform(df_memory['issue_text'].astype(str))
+#     else:
+#         tfidf_matrix = None
+
+# def clean_row(row):
+#     row['confidence'] = float(row.get('confidence', 0.0) or 0.0)
+#     for key in ['issue_text','auto_reply','strand_id','id']:
+#         row[key] = str(row.get(key,''))
+#     row['timestamp'] = int(row.get('timestamp', time.time()))
+#     return row
+
+# def normalize_ticket_row(row):
+#     return {
+#         "id": str(row.get("id","")),
+#         "timestamp": int(row.get("timestamp", time.time())),
+#         "customer": str(row.get("customer","Unknown")),
+#         "category": str(row.get("category","General")),
+#         "question": str(row.get("question","")),
+#         "botReply": str(row.get("botReply","")),
+#         "confidence": float(row.get("confidence",0.0)),
+#         "assignedAgent": str(row.get("assignedAgent","")),
+#         "strandId": str(row.get("strand_id",""))
+#     }
+
+# # ==============================
+# # Load memory index
+# # ==============================
+# df_memory = read_csv(MEMORY_FILE)
+# vectorizer, tfidf_matrix = None, None
+# rebuild_index()
+
+# # ==============================
+# # AI QUERY
+# # ==============================
+# @app.post("/ai/query")
+# def query(q: Query):
+#     text = q.text.strip().lower()
+#     if tfidf_matrix is None or len(df_memory) == 0:
+#         return {"results": [], "best_reply": None, "confidence": 0.0}
+
+#     q_vec = vectorizer.transform([text])
+#     sims = cosine_similarity(q_vec, tfidf_matrix)[0]
+#     ranked_idx = sims.argsort()[::-1][:q.top_k]
+#     results = []
+
+#     for idx in ranked_idx:
+#         raw_score = float(sims[idx])
+#         if raw_score > 0.9:
+#             score = random.uniform(90, 99.9)
+#         elif raw_score > 0.75:
+#             score = random.uniform(70, 90)
+#         elif raw_score > 0.6:
+#             score = random.uniform(60, 80)
+#         else:
+#             score = random.uniform(50, 70)
+
+#         row = {
+#             "issue_text": str(df_memory.iloc[idx]['issue_text']),
+#             "auto_reply": str(df_memory.iloc[idx]['auto_reply']),
+#             "confidence": round(score,1),
+#             "strand_id": str(df_memory.iloc[idx].get('strand_id', ''))
+#         }
+#         results.append(clean_row(row))
+
+#     best = results[0] if results else None
+#     return {
+#         "results": results,
+#         "best_reply": best['auto_reply'] if best else None,
+#         "confidence": best['confidence'] if best else 0.0
+#     }
+
+# # ==============================
+# # AI ADD MEMORY
+# # ==============================
+# @app.post("/ai/add")
+# def add_mem(m: AddMemory):
+#     global df_memory
+#     issue_lower = m.issue_text.strip().lower()
+#     existing = df_memory[df_memory['issue_text'].str.lower() == issue_lower]
+
+#     if not existing.empty:
+#         mem = clean_row(existing.iloc[0].to_dict())
+#         return {"status": "exists", "memory": mem}
+
+#     existing_main = [int(i[1:]) for i in df_memory['id'] if i.startswith("m") and i[1:].isdigit()]
+#     new_main = max(existing_main, default=0) + 1
+#     new_id = f"m{new_main}"
+#     new_strand = f"s-{new_main}"
+
+#     new = {
+#         "id": new_id,
+#         "timestamp": int(time.time()),
+#         "issue_text": m.issue_text.strip(),
+#         "auto_reply": m.auto_reply.strip(),
+#         "confidence": 0.0,
+#         "strand_id": new_strand
+#     }
+
+#     pd.DataFrame([new]).to_csv(MEMORY_FILE, mode='a', header=False, index=False)
+#     rebuild_index()
+#     return {"status": "added", "memory": clean_row(new)}
+
+# # ==============================
+# # TICKETS API
+# # ==============================
+# @app.get("/tickets")
+# def get_tickets():
+#     df = read_csv(TICKETS_FILE)
+#     tickets = df.to_dict(orient="records")
+#     return [normalize_ticket_row(t) for t in tickets]
+
+# @app.post("/tickets/{ticket_id}/apply_ai_reply")
+# async def apply_ai_reply(ticket_id: str):
+#     df = read_csv(TICKETS_FILE)
+#     idx = df.index[df['id'] == ticket_id]
+#     if len(idx) == 0:
+#         raise HTTPException(status_code=404, detail="Ticket not found")
+    
+#     i = idx[0]
+#     ticket = df.iloc[i]
+
+#     # Query AI memory
+#     ai_resp = query(Query(text=ticket['question'], top_k=3))
+#     best_reply = ai_resp.get('best_reply')
+#     confidence = ai_resp.get('confidence', 0.0)
+
+#     # ALWAYS update ticket if AI gives a reply
+#     if best_reply:
+#         df.at[i, 'botReply'] = best_reply
+#         df.at[i, 'confidence'] = confidence
+#         df.at[i, 'status'] = "Partially Resolved"
+
+#     df.to_csv(TICKETS_FILE, index=False)
+#     return normalize_ticket_row(df.iloc[i].to_dict())
+
+# @app.post("/tickets/{ticket_id}/resolve")
+# async def resolve_ticket(ticket_id: str, req: Request):
+#     body = await req.json()
+#     df = read_csv(TICKETS_FILE)
+#     idx = df.index[df['id'] == ticket_id]
+#     if len(idx) == 0:
+#         raise HTTPException(status_code=404, detail="Ticket not found")
+
+#     i = idx[0]
+#     df.at[i, 'status'] = body.get('status', 'Resolved')
+#     df.at[i, 'botReply'] = body.get('reply', df.at[i, 'botReply'])
+#     df.at[i, 'confidence'] = body.get('confidence', df.at[i, 'confidence'])
+#     df.at[i, 'assignedAgent'] = body.get('agent', df.at[i, 'assignedAgent'])
+
+#     df.to_csv(TICKETS_FILE, index=False)
+#     return normalize_ticket_row(df.iloc[i].to_dict())
+
+# # ==============================
+# # HEALTH
+# # ==============================
+# @app.get("/health")
+# def health():
+#     return {"status":"UP"}
+
+
+
+
+
+
 import os, uuid, time, random
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -227,7 +459,7 @@ if not os.path.exists(MEMORY_FILE):
 
 # Ensure tickets file exists
 if not os.path.exists(TICKETS_FILE):
-    df_init = pd.DataFrame(columns=["id","timestamp","customer","category","question","status","botReply","confidence","assignedAgent","strand_id"])
+    df_init = pd.DataFrame(columns=["id","timestamp","customer","category","question","status","botReply","confidence","assignedAgent","strandId","remarks"])
     df_init.to_csv(TICKETS_FILE, index=False)
 
 # ==============================
@@ -291,7 +523,8 @@ def normalize_ticket_row(row):
         "botReply": str(row.get("botReply","")),
         "confidence": float(row.get("confidence",0.0)),
         "assignedAgent": str(row.get("assignedAgent","")),
-        "strandId": str(row.get("strand_id",""))
+        "strandId": str(row.get("strandId","")),
+        "remarks": str(row.get("remarks",""))
     }
 
 # ==============================
@@ -423,12 +656,26 @@ async def resolve_ticket(ticket_id: str, req: Request):
     return normalize_ticket_row(df.iloc[i].to_dict())
 
 # ==============================
+# UPDATE REMARKS
+# ==============================
+@app.post("/tickets/{ticket_id}/remarks")
+async def update_remarks(ticket_id: str, req: Request):
+    body = await req.json()
+    remark = body.get("remarks", "")
+    
+    df = pd.read_csv(TICKETS_FILE)
+    if ticket_id not in df['id'].values:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+    
+    df.loc[df['id'] == ticket_id, 'remarks'] = remark
+    df.to_csv(TICKETS_FILE, index=False)
+    
+    ticket = df[df['id'] == ticket_id].iloc[0].to_dict()
+    return normalize_ticket_row(ticket)
+
+# ==============================
 # HEALTH
 # ==============================
 @app.get("/health")
 def health():
     return {"status":"UP"}
-
-
-
-

@@ -138,6 +138,149 @@
 //     }
 // }
 
+// package com.example.backend.repo;
+
+// import com.example.backend.model.Ticket;
+// import com.opencsv.CSVReader;
+// import com.opencsv.exceptions.CsvValidationException;
+// import org.springframework.stereotype.Repository;
+
+// import java.io.*;
+// import java.util.*;
+
+// @Repository
+// public class CsvTicketRepo {
+
+//     private final String filePath = "tickets.csv";
+//     private final List<String> headers = List.of(
+//             "id", "timestamp", "customer", "category", "question",
+//             "status", "botReply", "confidence", "assignedAgent", "strandId"
+//     );
+
+//     public CsvTicketRepo() throws IOException {
+//         File file = new File(filePath);
+//         if (!file.exists()) {
+//             try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+//                 bw.write(String.join(",", headers));
+//                 bw.newLine();
+//             }
+//         }
+//     }
+
+//     public synchronized void append(Ticket t) throws IOException {
+//         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+//             bw.write(String.join(",", Arrays.asList(
+//                     t.id,
+//                     String.valueOf(t.timestamp),
+//                     t.customer,
+//                     t.category,
+//                     t.question.replace(",", " "),
+//                     t.status,
+//                     t.botReply.replace(",", " "),
+//                     String.valueOf(t.confidence),
+//                     t.assignedAgent,
+//                     t.strandId != null ? t.strandId : ""
+//             )));
+//             bw.newLine();
+//         }
+//     }
+
+//     public synchronized List<Ticket> findAll() throws IOException {
+//         List<Ticket> list = new ArrayList<>();
+//         try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
+//             String[] line;
+//             boolean first = true;
+//             while (true) {
+//                 try {
+//                     line = reader.readNext();
+//                 } catch (CsvValidationException e) {
+//                     throw new IOException("CSV parse error", e);
+//                 }
+//                 if (line == null) break;
+//                 if (first) { first = false; continue; } // skip header
+//                 if (line.length < headers.size()) continue;
+
+//                 Ticket t = new Ticket();
+//                 t.id = line[0];
+//                 try { t.timestamp = Long.parseLong(line[1]); } catch (NumberFormatException e) { t.timestamp = 0; }
+//                 t.customer = line[2];
+//                 t.category = line[3];
+//                 t.question = line[4];
+//                 t.status = line[5];
+//                 t.botReply = line[6];
+//                 try { t.confidence = Double.parseDouble(line[7]); } catch (NumberFormatException e) { t.confidence = 0.0; }
+//                 t.assignedAgent = line[8];
+//                 t.strandId = line.length > 9 ? line[9] : null;
+
+//                 list.add(t);
+//             }
+//         }
+//         return list;
+//     }
+
+//     public synchronized boolean updateResolved(String id, String reply, String agent, double confidence) throws IOException {
+//         List<Ticket> tickets = findAll();
+//         boolean found = false;
+//         for (Ticket t : tickets) {
+//             if (t.id.equals(id)) {
+//                 t.botReply = reply;
+//                 t.assignedAgent = agent;
+//                 t.confidence = confidence;
+//                 t.status = "Resolved";
+//                 found = true;
+//                 break;
+//             }
+//         }
+//         if (found) saveAll(tickets);
+//         return found;
+//     }
+
+//     public synchronized boolean updateStatus(String id, String status) throws IOException {
+//         List<Ticket> tickets = findAll();
+//         boolean found = false;
+//         for (Ticket t : tickets) {
+//             if (t.id.equals(id)) {
+//                 t.status = status;
+//                 found = true;
+//                 break;
+//             }
+//         }
+//         if (found) saveAll(tickets);
+//         return found;
+//     }
+
+//     public synchronized boolean deleteById(String id) throws IOException {
+//         List<Ticket> tickets = findAll();
+//         boolean removed = tickets.removeIf(t -> t.id.equals(id));
+//         if (removed) saveAll(tickets);
+//         return removed;
+//     }
+
+//     private void saveAll(List<Ticket> tickets) throws IOException {
+//         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+//             bw.write(String.join(",", headers));
+//             bw.newLine();
+//             for (Ticket t : tickets) {
+//                 bw.write(String.join(",", Arrays.asList(
+//                         t.id,
+//                         String.valueOf(t.timestamp),
+//                         t.customer,
+//                         t.category,
+//                         t.question.replace(",", " "),
+//                         t.status,
+//                         t.botReply.replace(",", " "),
+//                         String.valueOf(t.confidence),
+//                         t.assignedAgent,
+//                         t.strandId != null ? t.strandId : ""
+//                 )));
+//                 bw.newLine();
+//             }
+//         }
+//     }
+// }
+
+
+
 package com.example.backend.repo;
 
 import com.example.backend.model.Ticket;
@@ -197,7 +340,7 @@ public class CsvTicketRepo {
                     throw new IOException("CSV parse error", e);
                 }
                 if (line == null) break;
-                if (first) { first = false; continue; } // skip header
+                if (first) { first = false; continue; }
                 if (line.length < headers.size()) continue;
 
                 Ticket t = new Ticket();
