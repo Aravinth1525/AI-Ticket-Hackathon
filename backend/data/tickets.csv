@@ -1,0 +1,5 @@
+"id","timestamp","customer","category","question","status","botReply","confidence","assignedAgent"
+"206cf2cb-fcb4-428d-a85d-e438bc678fbb","1760200783","Krithiik","Authentication","two factor authentication not working","Resolved","Confirm user's phone number, check SMS provider health, and review authentication server logs.","1.0","bot"
+"0be2574b-deae-4c05-9d58-0764ec639270","1760201308","Hari","VPN","VPN fails to connect","Resolved","Verify VPN credentials, ensure corporate VPN client is up-to-date, and check if 2FA is required.","1.0","bot"
+"6d9fe3c7-52bd-4855-9c12-17c8a1ea1d01","1760201569","Airtel","Email","Email sending failed","Resolved","Check SMTP server settings, validate sender domain SPF/DKIM, and review mail queue for errors.","1.0","bot"
+"fb5daba9-8172-47a7-9e28-a780113c4e64","1760203934","Hari","Internet","no internet connection","Resolved","Restart modem and check SIM provisioning","1.0","bot"

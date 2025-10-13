@@ -1,0 +1,9 @@
+id,timestamp,customer,category,question,status,botReply,confidence,assignedAgent
+972fbe5d-a681-48dd-9f61-a1e3104eed8d,1760211080,Krithiik,Email,Email sending failed,Resolved,Check SMTP server settings  validate sender domain SPF/DKIM  and review mail queue for errors.,0.963,bot
+e21b8089-1704-4e9b-84d1-d1bfb817b711,1760211189,Hari,File Sharing,I am not able to access shared files,Resolved,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,bot
+d9797a68-3c93-4627-9c8d-b9750273cbd5,1760271766,Priyanshi,File Sharing,not able to access shared files,Resolved,Get out,1.0,bot
+b7e89bd6-2ddc-4825-8da2-c21e76c44bd3,1760271952,HAri,Database,new issue happend in 203r23re,Resolved,Hi,1.0,human
+33c46bcd-ce20-4423-9e5f-3e3e0a4624b3,1760338374,Mounish,VPN,vpn connection failing,Resolved,Please check interent,1.0,human
+a56aa319-de25-4400-9531-19fa4e841d1b,1760338726,Hari,DNS,mounihsh new issue in 2025,Resolved,IDK,1.0,human
+6a8092df-6b8f-45b7-8448-fb712336b854,1760338772,Mounish,DNS,mounihsh new issue in 2025,Created,,0.0,
+3e1f251a-037e-4c15-a092-1e5563294c9f,1760338805,Hema,VPN,vpn connection failing,Resolved,awoudje,1.0,bot

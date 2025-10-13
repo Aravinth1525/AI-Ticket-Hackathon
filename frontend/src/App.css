@@ -1,0 +1,69 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Inter", sans-serif;
+}
+
+h1 {
+  text-align: center;
+  color: #1e3a8a;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+.search-bar {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.refresh {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.refresh:hover {
+  background: #1e40af;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.status-resolved {
+  color: #15803d;
+  font-weight: bold;
+}
+
+.status-pending {
+  color: #b45309;
+  font-weight: bold;
+}
+
+.action-btn { background: #2563eb; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; }
+.action-btn.secondary { background: #ef4444; }
+.action-btn.ghost { background: transparent; color: #2563eb; border: 1px solid #2563eb; }
+
+.status-created { color: #0ea5a4; font-weight: bold; }
+
+.small-input { padding:6px 8px; border-radius:6px; border:1px solid #ddd; }

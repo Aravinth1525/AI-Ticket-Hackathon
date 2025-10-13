@@ -1,0 +1,94 @@
+.health-panel {
+  padding: 16px;
+  font-family: Arial, sans-serif;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ai-efficiency {
+  font-weight: bold;
+}
+
+.search-bar {
+  flex: 1;
+  margin: 0 12px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.refresh-btn {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.ticket-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.ticket-table th,
+.ticket-table td {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  word-wrap: break-word;
+}
+
+.ticket-table th {
+  border-bottom: 2px solid #ccc;
+}
+
+.id-col {
+  word-break: break-all;
+}
+
+.status.created {
+  color: blue;
+  font-weight: bold;
+}
+
+.status.pending {
+  color: orange;
+  font-weight: bold;
+}
+
+.status.resolved {
+  color: green;
+  font-weight: bold;
+}
+
+.action-buttons {
+  display: inline-flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 4px 8px;
+  cursor: pointer;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.action-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.action-btn.secondary {
+  border-color: #888;
+  background-color: #f9f9f9;
+}
+
+.action-btn.ghost {
+  border-color: #aaa;
+  background-color: transparent;
+  color: #333;
+}

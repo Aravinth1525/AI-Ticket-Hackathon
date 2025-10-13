@@ -1,0 +1,134 @@
+id,timestamp,issue_text,auto_reply,confidence,strand_id
+m1,1620000000,"internet down","Restart modem and check SIM provisioning",0.0,s-1
+m1a,1620000010,"no internet connection","Restart modem and check SIM provisioning",0.0,s-1a
+m1b,1620000020,"unable to access the internet","Restart modem and check SIM provisioning",0.0,s-1b
+m2,1620000500,"sms not delivered","Check SMS gateway and operator routing",0.0,s-2
+m2a,1620000510,"unable to send SMS","Check SMS gateway and operator routing",0.0,s-2a
+m2b,1620000520,"text messages not going through","Check SMS gateway and operator routing",0.0,s-2b
+m3,1620000600,"slow internet","Run speed test and restart WAN interface",0.0,s-3
+m3a,1620000610,"internet connection is very slow","Run speed test and restart WAN interface",0.0,s-3a
+m3b,1620000620,"pages take long to load","Run speed test and restart WAN interface",0.0,s-3b
+m4,1697000000,"unable to connect to VPN","Verify VPN credentials, ensure corporate VPN client is up-to-date, and check if 2FA is required.",0.0,s-4
+m4a,1697000010,"vpn connection failing","Verify VPN credentials, ensure corporate VPN client is up-to-date, and check if 2FA is required.",0.0,s-4a
+m4b,1697000020,"cannot connect to corporate VPN","Verify VPN credentials, ensure corporate VPN client is up-to-date, and check if 2FA is required.",0.0,s-4b
+m5,1697003600,"email sending failed","Check SMTP server settings, validate sender domain SPF/DKIM, and review mail queue for errors.",0.0,s-5
+m5a,1697003610,"unable to send emails","Check SMTP server settings, validate sender domain SPF/DKIM, and review mail queue for errors.",0.0,s-5a
+m5b,1697003620,"cannot send email from account","Check SMTP server settings, validate sender domain SPF/DKIM, and review mail queue for errors.",0.0,s-5b
+m6,1697007200,"wifi keeps dropping","Update wireless drivers, check AP channel congestion, and move closer to access point.",0.0,s-6
+m6a,1697007210,"wifi disconnects frequently","Update wireless drivers, check AP channel congestion, and move closer to access point.",0.0,s-6a
+m6b,1697007220,"wireless connection unstable","Update wireless drivers, check AP channel congestion, and move closer to access point.",0.0,s-6b
+m7,1697010800,"printer not printing","Confirm printer is online, check toner/paper, and reinstall printer drivers on the workstation.",0.0,s-7
+m7a,1697010810,"cannot print documents","Confirm printer is online, check toner/paper, and reinstall printer drivers on the workstation.",0.0,s-7a
+m7b,1697010820,"printing fails","Confirm printer is online, check toner/paper, and reinstall printer drivers on the workstation.",0.0,s-7b
+m8,1697014400,"database connection timeout","Investigate DB server load, check connection pool settings, and verify network connectivity to DB host.",0.0,s-8
+m8a,1697014410,"cannot connect to database","Investigate DB server load, check connection pool settings, and verify network connectivity to DB host.",0.0,s-8a
+m8b,1697014420,"db connection fails","Investigate DB server load, check connection pool settings, and verify network connectivity to DB host.",0.0,s-8b
+m9,1697018000,"application crashes on startup","Collect application logs, check recent config changes, and ensure required environment variables are set.",0.0,s-9
+m9a,1697018010,"app fails to launch","Collect application logs, check recent config changes, and ensure required environment variables are set.",0.0,s-9a
+m9b,1697018020,"program crashes when starting","Collect application logs, check recent config changes, and ensure required environment variables are set.",0.0,s-9b
+m10,1697021600,"password expired","Inform user to reset password using self-service portal or admin reset and verify account unlock status.",0.0,s-10
+m10a,1697021610,"cannot login due to password","Inform user to reset password using self-service portal or admin reset and verify account unlock status.",0.0,s-10a
+m10b,1697021620,"need to reset expired password","Inform user to reset password using self-service portal or admin reset and verify account unlock status.",0.0,s-10b
+m11,1697025200,"slow DNS resolution","Check DNS server health, verify resolver configuration, and consider switching to faster DNS servers.",0.0,s-11
+m11a,1697025210,"DNS queries taking too long","Check DNS server health, verify resolver configuration, and consider switching to faster DNS servers.",0.0,s-11a
+m11b,1697025220,"websites load slowly due to DNS","Check DNS server health, verify resolver configuration, and consider switching to faster DNS servers.",0.0,s-11b
+m12,1697028800,"two factor authentication not receiving codes","Confirm user's phone number, check SMS provider health, and review authentication server logs.",0.0,s-12
+m12a,1697028810,"2FA codes not arriving","Confirm user's phone number, check SMS provider health, and review authentication server logs.",0.0,s-12a
+m12b,1697028820,"cannot get two factor code","Confirm user's phone number, check SMS provider health, and review authentication server logs.",0.0,s-12b
+m13,1697032400,"file share access denied","Check NTFS permissions, verify group membership, and ensure the SMB service is running on the file server.",0.0,s-13
+m13a,1697032410,"cannot access shared files","Check NTFS permissions, verify group membership, and ensure the SMB service is running on the file server.",0.0,s-13a
+m13b,1697032420,"network file access blocked","Check NTFS permissions, verify group membership, and ensure the SMB service is running on the file server.",0.0,s-13b
+5c97de85-852c-4b14-987f-31c675057fe2,1760207726,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,ece65f2e-1fa8-4248-8b4f-c737f3af732f
+647043ee-0b6e-43bf-9f36-8c36ed6047bb,1760207782,unknown,HI,1.0,5bd3660d-738a-4687-93c4-88b219fc440c
+d699d73d-a0d4-49f9-8f33-47f6cdfefa0d,1760207786,unknown,HI,1.0,40b239fc-436a-4340-99f6-084d94d2399f
+20af24a2-ec08-4181-bf31-8d00f9c9d57f,1760207789,unknown,HI,1.0,3c797b33-d522-4e91-9a6a-969dcb62a3e0
+fe3e184f-649f-4ce0-91f6-656a704dff98,1760207792,unknown,HI,1.0,266cc59b-0657-486a-9d5f-9b766ebf157d
+1e5d9c55-2b9a-4210-ae94-10bddced61a9,1760207797,unknown,HI,1.0,a9ba79a1-953a-4894-bd14-00c730bc314a
+e2f6a80c-5682-4275-a630-35117cdc4659,1760208104,unknown,Check SMTP server settings  validate sender domain SPF/DKIM  and review mail queue for errors.,1.0,19ef29b6-f6cb-4ca5-9266-2a34d363fc78
+b95e1485-2b5c-49c7-ae31-5872d0fd5f15,1760208105,unknown,Run speed test and restart WAN interface,1.0,5ee0b899-688d-4982-9f4d-a985248bf1e1
+520e815a-1713-4db7-9222-23ab3049fd69,1760208106,unknown,Run speed test and restart WAN interface,1.0,6a158b06-2ab0-4d08-9f21-2df314e143a4
+6706339f-774b-43e5-9074-60ae20e025a5,1760208108,unknown,Run speed test and restart WAN interface,1.0,16bcd02c-2af4-432e-a3b6-0bf6f2c19b0a
+552c5b12-163f-43da-824c-6b8cfa6b0622,1760208113,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,94277e6f-edca-43bf-a46a-874908db0657
+3651f371-aa68-470a-815e-0775f7da2545,1760208114,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,3016c851-3aea-4b1d-b4aa-f2ce605cd0de
+d24f8cb6-7ccd-40b1-9302-dadcf0b507d7,1760208116,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,8d4571d7-c57d-4080-a777-80e265f0d0bc
+15abc922-e102-46c5-84fc-140431bc4e19,1760208252,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,5194a46a-e8f4-4ff9-84da-dd26278b924d
+eb822c60-3cbd-466d-8618-555e89d02326,1760208259,unknown,Hi,1.0,0084dc26-be20-4e7c-ab05-764f15eb77f6
+34bd07f6-519a-46f4-a010-edd2dd593919,1760208261,unknown,Hi,1.0,5e83a0f8-17e2-4d16-94f1-aec7829d6bec
+4cdd3acd-bb86-4fc4-b76d-eb196d3970ac,1760208416,unknown,Hi,1.0,0e0e614d-f769-47e8-8f53-2ddda36cc621
+ad3bf58b-7455-41eb-b889-0cb9a41b5685,1760208484,unknown,Hi,1.0,8a985825-4311-4557-927b-80fc2bb1a2d2
+11468c00-11ff-4c55-915c-05a3ac2d3355,1760208503,unknown,asd,1.0,51530d05-80b8-4b95-8e8d-a9239109e215
+df62c8f2-d0a3-410d-bf6c-4859e4de7d86,1760208505,unknown,asd,1.0,5711fac1-a521-43fe-a022-94bcd9888442
+22baf20a-b664-4919-a9ee-a8c876395957,1760208550,unknown,hi,1.0,1a82d4a2-ca25-4ca7-bdcb-cc5f634dad4b
+3799cd67-4cf9-4d5e-bc15-e911d577c405,1760208552,unknown,hi,1.0,2fabbb89-76c3-48c7-a97a-10f272c96d82
+a798ea9f-9af2-4613-9a2a-8a0713bc07fc,1760208636,unknown,hi,1.0,d22ea4df-2a54-4d51-b6c8-01129efae8cd
+e3964211-9c22-410e-8b6e-f78de0789814,1760208661,unknown,Manual,1.0,caea2a4f-6eec-49d7-a1aa-60d8e3712938
+1f13343e-62f6-4811-a288-6b9628a8665f,1760208663,unknown,Manual,1.0,e3e7e1dc-0f25-47bc-9c68-350f1503cd58
+7fdfa690-cd33-4180-a407-8693019a543b,1760208763,unknown,Manual,1.0,264695df-eaee-42e4-af59-e735c4770f9a
+ec58591a-6a7c-489f-b04c-1e78376c73b9,1760208766,unknown,Manual,1.0,c907e3fc-9e2f-43b6-8e18-9762c2c7fc52
+6ec2b360-4b3e-4e1b-bf74-b9a5e403be70,1760208793,unknown,Run speed test and restart WAN interface,1.0,60f8e521-95f8-442c-a45a-7b1a97c3deba
+0361188d-a3b4-44f9-9086-63cd6fa9e665,1760208796,unknown,Run speed test and restart WAN interface,1.0,7a0d864b-70ae-43a1-be8b-25a1483a4915
+fe2c5396-3104-430b-8104-ef69f77a9df7,1760208798,unknown,Run speed test and restart WAN interface,1.0,066a0807-ab54-4aaf-97c1-4dbdeebbbdee
+cf850483-a11b-4d6c-a76b-5a6c3f69bfcf,1760208802,unknown,awd,1.0,982ec520-bc58-4ea5-aab1-69ed28892b1c
+80ec4326-c143-4225-a139-a32c9e19e69f,1760208805,unknown,awd,1.0,dc2ea8ea-8376-4fd6-880b-ba4005fcd305
+dd068346-f9d6-490a-b208-c2eba1ccbd90,1760208880,unknown,ADEDW,1.0,7a36f693-c148-45e4-833b-a1eb29832c9b
+012fd940-f787-4fdf-9092-3e4c261d580c,1760208883,unknown,ADEDW,1.0,4afddc5d-b401-41a7-bfea-e23db74c21c2
+751904c7-6de0-46b5-9c16-6f1ad8a5e2cf,1760208886,unknown,ADSSX,1.0,1a5e3668-4a4b-41fa-a310-81faf2501cc2
+e00af97f-bbab-4f22-a27b-91370bce11b1,1760208887,unknown,ADSSX,1.0,c3911cf0-2924-4769-a35f-8268bd4698f8
+4c2d89df-c43c-4d18-809b-90050bcc5dfe,1760208926,unknown,nO,1.0,42e0f659-f010-4067-808e-0150013e1951
+dcecd55e-fb90-42a9-bd0a-620a33f0be47,1760208927,unknown,Run speed test and restart WAN interface,1.0,7a6daab2-1a6a-404b-be3c-1155b90b35d4
+b9c668c3-708e-4685-ab9f-1c5657848620,1760208931,unknown,SEF,1.0,0cef11c2-03c8-4171-b694-84f15668f725
+a639e34b-d8f7-48f5-abd7-afb0a4626841,1760208932,unknown,Run speed test and restart WAN interface,1.0,a3042cd1-48d8-442a-8753-534d6ed6e29f
+3be32f07-10ac-435a-a47c-a47cf781f444,1760208935,unknown,Run speed test and restart WAN interface,1.0,e8c687b0-9a46-430a-a865-caedea186d77
+b21d233d-ff05-425d-bbc7-11baca82f04c,1760208936,unknown,Run speed test and restart WAN interface,1.0,21d7cd2d-e29b-4c39-97e7-3e7c88d4c342
+5aeb5330-e3ff-41c4-b4bb-5739d03c4e40,1760209035,unknown,Sdqw,1.0,2c853621-5bc8-40b7-b476-7b68c37dd8e1
+f4b5bb3d-0255-42d8-afe9-f8acc3fa0c7e,1760209037,unknown,Sdqw,1.0,b3673484-6929-4524-82e1-a8144a1e9da5
+4f6a8707-50c0-4b6f-91c2-7151641bc2ef,1760209042,unknown,Sdqw,1.0,53fa5672-8617-4ac1-889f-11405ec9d1a7
+30408fae-790a-48d4-a44b-bd87341a724b,1760209110,unknown,Sdqw,1.0,a8732634-ceb7-49b4-806b-e62e621cd00b
+335380fc-b92e-44bb-9b34-1ea52281dfbb,1760209146,unknown,Sdqw,1.0,79b20744-61ab-4deb-888d-af6e6a2ff5e8
+ce482927-b856-49f1-8b1a-f780b760f4d7,1760209163,unknown,Sdqw,1.0,09267839-b09b-48ce-ade8-e137bacce87c
+be3e7a15-d720-4eac-9eac-eb2786e07e7c,1760210099,unknown,Run speed test and restart WAN interface,1.0,99227b1d-32b1-4c00-8030-d01c506d791f
+5a41cf7f-dbea-4cf8-8f52-f03e199216f9,1760210101,unknown,Run speed test and restart WAN interface,1.0,89e4eb3d-8190-4330-ae01-d872d12703b8
+407d0f84-1087-4739-a2de-ea194f5ce69c,1760210354,unknown,IDK,1.0,dab87262-7bbb-4ecf-b91e-4aa4ab5ce6bd
+ebec7d91-8eb5-4fcd-9760-9381138072f6,1760210358,unknown,IDK,1.0,0a1a49cd-19ef-4b6f-aa75-5f7c8c284c2b
+c309d202-b702-485b-b2fd-90deebb2e82f,1760210360,unknown,IDK,1.0,00739ba6-4923-499c-8bcf-a965d318d3c8
+43d51637-014d-4986-8077-5917e972bf23,1760210452,unknown,DS,1.0,92218cfe-6095-4731-b586-f99591ed3ae9
+0091f1d6-9575-43cf-845a-adaffb187525,1760210499,unknown,Check SMTP server settings  validate sender domain SPF/DKIM  and review mail queue for errors.,1.0,31a493ff-0120-4b8a-9839-d4abdad8cdf9
+1fb213b4-5dc7-40a8-9460-8e63cd23264e,1760210501,unknown,sad,1.0,a7885775-35eb-4f5c-90eb-0e283299b346
+2841ae2d-6ee5-467c-a825-f146007b2492,1760210504,unknown,sad,1.0,4beb3123-6fc5-439a-a6e9-9c55207244ce
+a64c632f-408a-406b-9a5a-4db872373739,1760210521,unknown,Run speed test and restart WAN interface,1.0,d0e36a9d-534e-4b91-8476-1e0557830515
+e684f8b2-f17b-4562-b1e6-4759d589cebe,1760210677,unknown,HI,1.0,6dcdeeaf-b9f6-485a-997e-6a83a82c18c4
+f2fdb2dc-107e-47ad-8a01-2af41eaa9984,1760210680,unknown,HI,1.0,fb41730a-079f-436f-ad8d-63c7a209556e
+47ed8d59-bf8b-41b5-8f10-114cd9b465cf,1760210685,unknown,Hi,1.0,8acfa72b-5997-424d-b84b-6e3722684ff9
+9871dd17-fe6c-4a3c-8349-be5a82c258fc,1760210693,unknown,Hi,1.0,7e606f9f-7f0f-44e4-a0cd-8fb7e1e88152
+c46ff8da-180d-4ced-9056-3facc2df265a,1760210696,unknown,ADWA,1.0,61926587-642a-4f6f-bc25-9ecda8f30739
+ce34ef7f-d100-4f2c-ac73-0bb91a8811ce,1760210793,unknown,WDAWQ,1.0,f3123b4f-8f43-443b-992b-e59282f7bf9c
+17b8cafd-17dc-4227-b71f-d18ec594cf36,1760210852,unknown,WDAWQ,1.0,e5e27ce6-a809-4345-b6c2-5566538a942d
+27f63d47-c0d3-436d-9086-8d3c77d95dcd,1760210855,unknown,WDQW,1.0,9db1da33-9cf3-4b3f-af29-b63a9470dad8
+b3f57731-ba87-41fe-b263-914f251251c0,1760210891,unknown,Check SMTP server settings  validate sender domain SPF/DKIM  and review mail queue for errors.,1.0,353ea0ff-d020-4370-8e1d-fdff1d141921
+56c86fe2-2957-4407-85bf-364def29800b,1760211108,unknown,Check SMTP server settings  validate sender domain SPF/DKIM  and review mail queue for errors.,1.0,4db1469f-b079-4629-bc31-cbe2545692c4
+97439f10-7050-40fe-819f-cb4906f03929,1760211196,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,1713cd0a-b22c-4f48-b394-6a2cf44e4732
+602ef0c9-adce-46bb-a14d-621abfeca8d5,1760211197,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,48e40284-0365-4a4b-8aad-8f682f6da480
+b50b9a1a-d7d5-4632-93c0-28b7f44f6391,1760211198,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,adda0170-3653-4e30-990c-711fc7eedda1
+68dd8f1e-b6ee-4774-b3ee-323740bac301,1760211198,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,582a94bf-899f-41e3-8348-a5d28a9a7426
+f167a82a-8b62-4183-961c-fdf2b6e07447,1760211198,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,9056b4bc-ceb8-4828-96e0-6c420145d369
+ec7372a6-bb34-4714-8f12-2f21d91578e8,1760211199,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,f2397604-778f-4203-92cd-392abbf1aef5
+89bafa84-a0a0-4bdc-aa3f-2527520e34b2,1760211200,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,7493f77e-908d-4494-b79c-450bc4b692da
+b60597c7-554c-45dc-aea4-f1ea4c57cbfb,1760211200,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,88f7a8c6-3b56-47e0-b394-65e693c72196
+01c16fec-9b83-4360-98fc-5cd0e3bc639a,1760211207,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,06cd4171-2de1-4a25-a78d-5e2e87f8dc8e
+49723d60-d589-48af-91dc-2141608b8645,1760211207,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,3dd49bb7-8b71-4044-85a6-1e3a44ac443f
+b153ca8b-f2bc-4c37-ab08-58e1bc33b769,1760211239,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,29f2a42a-fd01-4299-812f-18d766afc231
+235e9133-5dfd-408f-950b-f33c60763373,1760211242,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,29d3de11-9a2a-4cf7-86a8-050944de01eb
+10f41f6e-4fb6-4b2d-976a-f719973d861d,1760211452,unknown,wadwq,1.0,db76e140-3127-472e-84d6-041d0b940273
+963d6b97-3282-4def-b147-d5e4fa5886e0,1760211518,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,8daaa104-d5c4-40c3-8de7-6687421f2a1b
+30d527bf-9603-4353-a42f-617c2e611e45,1760211525,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,d808fa0a-7ac6-456e-8ff7-419b4e2cfccc
+dd4a45fc-7694-4995-a828-a9d0887557b3,1760211528,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,326dcd3f-c12f-44ec-aafa-bb73bc4b607b
+b4d6317a-7cf6-48d1-b0f0-19968b54b2bf,1760271885,unknown,Get out,1.0,bd1cea99-1907-4d71-a16b-906131545c58
+93d2026b-51d1-4714-86d7-26efe68feb16,1760271892,unknown,Get out,1.0,c6b051ae-b05c-414f-a62f-ab1e8ee532e6
+a920d97c-3239-43a7-b75a-8468fd39ce1d,1760271962,unknown,Hi,1.0,d9ee9a1b-89f4-4ee0-8bc3-31adaf157bc6
+33a7adb2-e33f-41ba-8ec2-8e224976815c,1760338407,unknown,Please check interent,1.0,d6b1c4f5-95dc-460e-beae-88743b2286a2
+8c05ffcf-7057-469c-9c40-d4fd4e4d1cc5,1760338756,unknown,IDK,1.0,3567f6de-9e9d-4a67-9822-f11af8ea3efd
+c067e8f8-8786-4eb6-817e-55b1a35372fc,1760338813,unknown,Verify VPN credentials  ensure corporate VPN client is up-to-date  and check if 2FA is required.,1.0,8fe744a1-9373-42ee-b9c2-906b57b792c0
+fe2d9599-e022-4730-926c-4449112f4adf,1760338818,unknown,awoudje,1.0,66e73ea5-1a60-4a4d-a165-7dfbad2eab58
+bae2934f-eff4-4057-9a62-132725133b6b,1760338826,unknown,awoudje,1.0,b55540a3-28c8-4c55-8c76-cf0fc9ce6813
+d87c0ea7-9ae9-40b7-b72b-89e9552022b6,1760338834,unknown,awoudje,1.0,a3ed1976-82bc-446d-95f5-0f2c7cc9711f
+57c0e8a0-3ac3-4fd4-8134-590ac6afbd80,1760339788,unknown,Check NTFS permissions  verify group membership  and ensure the SMB service is running on the file server.,1.0,199784ad-c593-47bf-a21e-8d61c13dc579
