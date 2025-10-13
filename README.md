@@ -13,6 +13,10 @@
 
 **User**
 
-<img width="1788" height="1084" alt="image" src="https://github.com/user-attachments/assets/4a7858e2-7c9d-4be9-860f-69a7fab40146" />
+<img width="1788" height="1176" alt="image" src="https://github.com/user-attachments/assets/832450cb-a4bf-4643-b091-6d0b435ec5a7" />
+
+**BotReply**
+
+<img width="1136" height="96" alt="image" src="https://github.com/user-attachments/assets/820a1d21-0242-434b-a26f-4c1c605e1b8b" />
 
 
