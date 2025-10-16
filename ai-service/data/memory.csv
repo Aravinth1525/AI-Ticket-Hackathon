@@ -38,3 +38,6 @@ m12b,1697028820,"cannot get two factor code","Confirm user's phone number, check
 m13,1697032400,"file share access denied","Check NTFS permissions, verify group membership, and ensure the SMB service is running on the file server.",0.0,s-13
 m13a,1697032410,"cannot access shared files","Check NTFS permissions, verify group membership, and ensure the SMB service is running on the file server.",0.0,s-13a
 m13b,1697032420,"network file access blocked","Check NTFS permissions, verify group membership, and ensure the SMB service is running on the file server.",0.0,s-13b
+m14,1760456219,This is a very new issue and dont have a reply,Please wait till admin replies,0.0,s-14
+m15,1760587906,One new issue happened,This issue is under consideration,0.0,s-15
+m16,1760599654,VPN fails to connect,Verify VPN credentials  ensure corporate VPN client is up-to-date  and check if 2FA is required.,0.0,s-16

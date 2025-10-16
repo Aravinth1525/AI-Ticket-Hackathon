@@ -813,9 +813,10 @@
 
 
 
-// auth-service
-
+// auth-service + download report
 import React, { useEffect, useState } from "react";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 export default function TicketTable({ apiUrl, role }) {
   const [tickets, setTickets] = useState([]);
@@ -826,7 +827,6 @@ export default function TicketTable({ apiUrl, role }) {
     const res = await fetch(`${apiUrl}/tickets`);
     const data = await res.json();
 
-    // Normalize fields for frontend
     const updated = data.map((t) => ({
       ...t,
       strand_id: t.strand_id ?? t.strandId ?? "",
@@ -883,6 +883,31 @@ export default function TicketTable({ apiUrl, role }) {
     fetchTickets();
   };
 
+  // Download Excel file (Admin)
+  const handleDownloadExcel = () => {
+    const wsData = tickets.map((t) => ({
+      ID: t.id,
+      Customer: t.customer,
+      Category: t.category,
+      Question: t.question,
+      Status: t.status,
+      Reply: t.currentReply,
+      Confidence:
+        (t.confidence && t.confidence > 1 ? t.confidence : (t.confidence || 0) * 100).toFixed(1) + "%",
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(wsData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Tickets");
+
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    saveAs(blob, `Tickets_Report_${new Date().toISOString().slice(0, 10)}.xlsx`);
+  };
+
   // Filter tickets by search
   const filtered = tickets.filter((t) =>
     t.question.toLowerCase().includes(search.toLowerCase())
@@ -905,9 +930,16 @@ export default function TicketTable({ apiUrl, role }) {
           onChange={(e) => setSearch(e.target.value)}
           style={{ flex: 1, marginRight: 8, padding: "6px 8px" }}
         />
-        <button className="refresh" onClick={fetchTickets} style={{ padding: "6px 12px" }}>
-          🔄 Refresh
-        </button>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button className="refresh" onClick={fetchTickets} style={{ padding: "6px 12px" }}>
+            🔄 Refresh
+          </button>
+          {role === "ADMIN" && (
+            <button className="refresh" onClick={handleDownloadExcel} style={{ padding: "6px 12px" }}>
+              📊 Download Excel
+            </button>
+          )}
+        </div>
       </div>
 
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
