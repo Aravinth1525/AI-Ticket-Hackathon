@@ -936,7 +936,7 @@ export default function TicketTable({ apiUrl, role }) {
           </button>
           {role === "ADMIN" && (
             <button className="refresh" onClick={handleDownloadExcel} style={{ padding: "6px 12px" }}>
-              📊 Download Excel
+              📊 Download Report
             </button>
           )}
         </div>

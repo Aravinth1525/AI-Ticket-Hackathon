@@ -6,3 +6,4 @@ c46ca860-c437-4fa9-ba0b-9d15107d4e46,1760456106,Cavin,VPN,My VPN is keep on disc
 2e152e7a-1a82-4204-8417-7c8ee8911a9b,1760456462,Aravinth,Authentication,2 factor authentication is not working,Resolved,Confirm user's phone number  check SMS provider health  and review authentication server logs.,60.1,bot,
 109b1a63-eaea-439e-83d0-4a31f4d9c200,1760587814,Hema,Printer,One new issue happened,Pending,This issue is under consideration,1.0,human,
 8c56879a-a888-4f98-97f7-c8830f822425,1760591232,Aravinth,VPN,This is a very new issue and dont have a reply,Pending,Please wait till admin replies,98.7,bot,
+79d75cca-62e0-4683-a23c-49974e0ec84a,1760600112,Hema,WiFi,When I send files to HP secure client and printer is not working,Resolved,Confirm printer is online  check toner/paper  and reinstall printer drivers on the workstation.,50.3,bot,
