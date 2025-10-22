@@ -814,6 +814,7 @@
 
 
 // auth-service + download report
+
 import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -821,6 +822,7 @@ import { saveAs } from "file-saver";
 export default function TicketTable({ apiUrl, role }) {
   const [tickets, setTickets] = useState([]);
   const [search, setSearch] = useState("");
+  const [selectedModel, setSelectedModel] = useState("OpenAI GPT-4"); // ✅ Added
 
   // Fetch tickets from backend
   const fetchTickets = async () => {
@@ -870,6 +872,7 @@ export default function TicketTable({ apiUrl, role }) {
         status: "Resolved",
         issue_text: ticket.question,
         strandId: ticket.strand_id,
+        model: selectedModel, // ✅ Added model
       }),
     });
 
@@ -930,7 +933,24 @@ export default function TicketTable({ apiUrl, role }) {
           onChange={(e) => setSearch(e.target.value)}
           style={{ flex: 1, marginRight: 8, padding: "6px 8px" }}
         />
-        <div style={{ display: "flex", gap: 8 }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+
+          {/* ✅ Added AI Model Dropdown */}
+          {role === "ADMIN" && (
+            <select
+              value={selectedModel}
+              onChange={(e) => setSelectedModel(e.target.value)}
+              style={{ padding: "6px 8px" }}
+            >
+              <option>ATC_NOOBS</option>
+              <option>Cohere Embed</option>
+              <option>Google Gemini</option>
+              <option>LLaMA2</option>
+              <option>MiniLM</option>
+              <option>BERT</option>
+            </select>
+          )}
+
           <button className="refresh" onClick={fetchTickets} style={{ padding: "6px 12px" }}>
             🔄 Refresh
           </button>
@@ -945,13 +965,11 @@ export default function TicketTable({ apiUrl, role }) {
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
-            {["ID", "Customer", "Category", "Question", "Status", "Reply", "Confidence"].map(
-              (h) => (
-                <th key={h} style={{ borderBottom: "1px solid #ccc", padding: "8px", textAlign: "left" }}>
-                  {h}
-                </th>
-              )
-            )}
+            {["ID", "Customer", "Category", "Question", "Status", "Reply", "Confidence"].map((h) => (
+              <th key={h} style={{ borderBottom: "1px solid #ccc", padding: "8px", textAlign: "left" }}>
+                {h}
+              </th>
+            ))}
             {role === "ADMIN" && (
               <th style={{ borderBottom: "1px solid #ccc", padding: "8px", textAlign: "left" }}>
                 Action
@@ -966,7 +984,8 @@ export default function TicketTable({ apiUrl, role }) {
               <td style={{ padding: "8px" }}>{t.customer}</td>
               <td style={{ padding: "8px" }}>{t.category}</td>
               <td style={{ padding: "8px" }}>{t.question}</td>
-              <td style={{
+              <td
+                style={{
                   padding: "8px",
                   fontWeight: "bold",
                   color:
@@ -975,7 +994,8 @@ export default function TicketTable({ apiUrl, role }) {
                       : t.status === "Created" || t.status === "Partially Resolved"
                       ? "blue"
                       : "orange",
-                }}>
+                }}
+              >
                 {t.status}
               </td>
               <td style={{ padding: "8px" }}>{t.currentReply}</td>
@@ -983,10 +1003,15 @@ export default function TicketTable({ apiUrl, role }) {
 
               {role === "ADMIN" && (
                 <td style={{ padding: "8px", display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  {(t.status === "Created" || t.status === "Pending" || t.status === "Partially Resolved") && (
+                  {(t.status === "Created" ||
+                    t.status === "Pending" ||
+                    t.status === "Partially Resolved") && (
                     <>
                       {t.originalBotReply && (
-                        <button className="action-btn" onClick={() => handleResolve({ ...t, acceptBotClicked: true })}>
+                        <button
+                          className="action-btn"
+                          onClick={() => handleResolve({ ...t, acceptBotClicked: true })}
+                        >
                           Accept Bot
                         </button>
                       )}
@@ -1000,13 +1025,16 @@ export default function TicketTable({ apiUrl, role }) {
                   )}
                   {t.status === "Resolved" && (
                     <>
-                      <button className="action-btn ghost" onClick={() =>
-                        fetch(`${apiUrl}/tickets/${t.id}/status`, {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ status: "Pending" }),
-                        }).then(() => fetchTickets())
-                      }>
+                      <button
+                        className="action-btn ghost"
+                        onClick={() =>
+                          fetch(`${apiUrl}/tickets/${t.id}/status`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ status: "Pending" }),
+                          }).then(() => fetchTickets())
+                        }
+                      >
                         Change Status
                       </button>
                       <button className="action-btn secondary" onClick={() => handleDelete(t.id)}>
